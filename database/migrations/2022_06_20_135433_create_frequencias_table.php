@@ -15,7 +15,11 @@ return new class extends Migration
     {
         Schema::create('frequencias', function (Blueprint $table) {
             $table->id();
+            $table->string('idAluno', 10);
+            $table->dateTime('dataEntrada');
+            $table->dateTime('dataSaida');
             $table->timestamps();
+
         });
     }
 
