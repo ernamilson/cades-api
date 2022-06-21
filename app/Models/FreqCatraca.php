@@ -28,6 +28,8 @@ class FreqCatraca extends Model
      */
     protected $primaryKey = 'idCatraca';
 
+    protected $table = 'FreqCatraca';
+
     /**
      * @var array
      */
