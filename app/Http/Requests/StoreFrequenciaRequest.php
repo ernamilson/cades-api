@@ -25,8 +25,8 @@ class StoreFrequenciaRequest extends FormRequest
     {
         return [
             "idAluno" => "required|max:10",
-            "dataEntrada" => "required",
-            "dataSaida" => "required"
+            "dataLeitura" => "required",
+            "Data" => "required"
         ];
     }
 }

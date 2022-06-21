@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreFrequenciaRequest;
-use App\Models\Frequencia;
+use App\Models\FreqCatraca;
 use Illuminate\Http\Request;
 
-class FrequenciaController extends Controller
+class FreqController extends Controller
 {
     /**
      * Display a listing of the resource.
