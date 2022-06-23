@@ -31,6 +31,13 @@ class FreqCatraca extends Model
     protected $table = 'FreqCatraca';
 
     /**
+     * The database connection that should be used by the model.
+     *
+     * @var string
+     */
+    // public $connection = '';
+    
+    /**
      * @var array
      */
     protected $fillable = ['Descricao', 'idAluno', 'Data', 'Hora', 'controle', 'faltou', 'dataLeitura', 'usuario', 'Movimento', 'idModeloLeituraCatraca'];
@@ -42,4 +49,10 @@ class FreqCatraca extends Model
     {
         return $this->belongsTo('App\Models\ModeloLeituraCatraca', 'idModeloLeituraCatraca');
     }
+
+
+    // public function setConnection($conn, $new_conn)
+    // {
+    //     $conn = $new_conn;
+    // }
 }

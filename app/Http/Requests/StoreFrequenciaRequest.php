@@ -24,7 +24,9 @@ class StoreFrequenciaRequest extends FormRequest
     public function rules()
     {
         return [
-            "idAluno" => "required|max:10",
+            "token" => "required",
+            "chave" => "required",
+            "idAluno" => "required|max:6",
             "dataLeitura" => "required",
             "Data" => "required"
         ];

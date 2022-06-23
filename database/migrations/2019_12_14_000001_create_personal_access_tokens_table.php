@@ -11,6 +11,14 @@ return new class extends Migration
      *
      * @return void
      */
+
+    /**
+     * The database connection that should be used by the migration.
+     *
+     * @var string
+     */
+    protected $connection = 'mysql2';
+    
     public function up()
     {
         Schema::create('personal_access_tokens', function (Blueprint $table) {

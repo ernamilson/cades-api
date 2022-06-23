@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\FreqCatracaController;
-use App\Http\Controllers\ExternalDatabaseController;
+use App\Http\Controllers\Api\ExternalDatabaseController;
+
+use App\Models\User;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('frequencias', FreqCatracaController::class);
+Route::apiResource('/frequencias', FreqCatracaController::class);
 
-Route::apiResource('test', ExternalDatabaseController::class);
+Route::apiResource('/test', ExternalDatabaseController::class);

@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Models\Tokens;
 use Illuminate\Http\Request;
-use App\Models\Tokens_api;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
 
@@ -77,40 +79,68 @@ class ExternalDatabaseController extends Controller
         return $decArray;
     }
     
-    private function generateDatabaseConnectionConfig($cfg_data)
+    private function generateDatabaseConnectionConfig($data, $cript_reversa, $chave_cr)
     {
-        
-    }
-
-    public function index(Request $request)
-    {
-        [$chave_cr, $cript_reversa] = $this->getCryptoParam();
-        $data = new Tokens_api;
-        $req_data = $data->getData($request->chave, $request->token);
-        $driver_db = match($req_data->driver_db){
+        // matching driver name to laravel driver names
+        $driver_db = match($data->driver_db){
             "mssql" => "sqlsrv",
         };
-        // $port = match($req_data->driver_db){
-
-        // };
-
+        // matching default db ports based on driver
+        $port = match($driver_db){
+            "mssql" => "3306",
+            "sqlsrv" => "1433"
+        };
+        // crypt data (usr, pwd, db_name)
         $encrypt_data = [
-                "user" => $req_data->usuario,
-                "password" => $req_data->senha,
-                "database" => $req_data->nome_banco,
+                "database" => $data->nome_banco,
+                "user" => $data->usuario,
+                "password" => $data->senha
         ];
+        // uncrypt data (driver, host, port)
         $connection_data = [
                 "driver" => $driver_db,
-                "host" => $req_data->host,
-                "port" => 1433
+                "host" => $data->host,
+                "port" => $port,
+                "trust_server_certificate" => 'true'
         ];
-        $final_connection_data = array_merge($connection_data, $encrypt_data);
-        return response()->json([
-            "status" => true,
-            "message" => 'Token validado',
-            "conn" => $final_connection_data,
-            "decr" => $this->decryptArray($encrypt_data, $cript_reversa, $chave_cr),
-        ]);
+
+        $decrypt_data = $this->decryptArray($encrypt_data, $cript_reversa, $chave_cr);
+
+        $final_connection_data = array_merge($connection_data, $decrypt_data);
+        
+        return $final_connection_data;
+    }
+
+    private function setConnConfig($config) {
+        $conn_name = $config["driver"]."_".$config["user"];
+        Config::set("database.connections.".$conn_name, $config);
+        return $conn_name;
+    }
+
+    public function generateConfig(Request $request)
+    {
+        [$chave_cr, $cript_reversa] = $this->getCryptoParam();
+        $tokens = new Tokens;
+
+        // getting SQL response
+        $req_data = $tokens->getData($request->chave, $request->token);
+        
+        if($req_data === false) {
+            return false;
+        }
+
+        // setting connection config
+        $conn_cfg = $this->generateDatabaseConnectionConfig($req_data, $cript_reversa, $chave_cr);
+        
+        // setting connection
+        $conn_name = $this->setConnConfig($conn_cfg);
+
+        return $conn_name;
+        // return response()->json([
+        //     "status" => true,
+        //     "message" => 'Credenciais validadas',
+        //     // "conn" => config()->get('database.connections')[$conn_name],
+        // ]);
     }
     
 }
