@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\FreqCatraca;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\DB;
+
 class FreqCatracaController extends ExternalDatabaseController
 {
     /**
@@ -45,15 +47,29 @@ class FreqCatracaController extends ExternalDatabaseController
                 'conn' => $conn
             ]);
         }
+        // var_dump($conn);
         // $freq_catraca->setConnection($freq_catraca->connection, $conn);
-        var_dump(json_encode(config()->get('database.connections')));
+        // var_dump(json_encode(config()->get('database.connections')));
         try {
-            $freq_catraca = new FreqCatraca();
-            $freq_catraca::on('sqlsrv_userInfor')->create([
-                'idAluno' => $request->idAluno,
-                'dataLeitura' => $request->dataLeitura,
-                'Data' => $request->Data,
-            ]);
+            // var_dump(json_encode(config()->get('database.connections')[$conn]));
+            // DB::connection($conn)->getPdo();
+            // die();
+            // var_dump($test);
+
+
+            // using DB::connection
+            $freq_catraca = DB::connection($conn)->insert(
+                'insert into FreqCatraca (idAluno, dataLeitura, Data) values (?, ?, ?)',
+                [$request->idAluno, $request->dataLeitura, $request->Data]
+            );
+
+            // using model connection (probably using .env definitions)
+            // $freq_catraca = FreqCatraca::create([
+            //     'idAluno' => $request->idAluno,
+            //     'dataLeitura' => $request->dataLeitura,
+            //     'Data' => $request->Data,
+            // ]);
+            
             return response()->json([
                 'status' => true,
                 'message' => 'Frequência cadastrada!',
