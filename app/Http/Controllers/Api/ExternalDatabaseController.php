@@ -13,8 +13,8 @@ class ExternalDatabaseController extends Controller
 {
     private function getCryptoParam()
     {
-        $chave_cr = 97;  
-        $caracteres_cript_reversa = md5(sha1("GrcZlOUnd0Y6tKOAlc8I69IFX6k_p1S3PAqoJCom3AKnThz_t3r0Cc5VxxjcXc-s9kB9JfCyCw3EPZ0XkcylXwCL9jfJOfeQ1"));
+        $chave_cr = env('CRYPTO_KEY');  
+        $caracteres_cript_reversa = md5(sha1(env('CRYPTO_REVERSA')));
         return [$chave_cr, $caracteres_cript_reversa];
     } 
 

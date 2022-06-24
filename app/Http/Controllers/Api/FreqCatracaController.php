@@ -73,8 +73,6 @@ class FreqCatracaController extends ExternalDatabaseController
             return response()->json([
                 'status' => true,
                 'message' => 'Frequência cadastrada!',
-                // 'post' => $frequencia,
-                'conn' => $conn_data
             ]);
         } catch (\Throwable $th) {
             throw $th;
