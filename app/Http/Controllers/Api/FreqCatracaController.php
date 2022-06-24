@@ -47,10 +47,12 @@ class FreqCatracaController extends ExternalDatabaseController
                 'conn' => $conn
             ]);
         }
+        // var_dump($conn);
         // $freq_catraca->setConnection($freq_catraca->connection, $conn);
         // var_dump(json_encode(config()->get('database.connections')));
         try {
             // var_dump(json_encode(config()->get('database.connections')[$conn]));
+<<<<<<< HEAD
             // $conn_data = json_encode(config()->get('database.connections')[$conn]);
             // DB::connection($conn)->getPdo();
 
@@ -66,6 +68,25 @@ class FreqCatracaController extends ExternalDatabaseController
                 'dataLeitura' => $request->dataLeitura,
                 'Data' => $request->Data,
             ]);
+=======
+            // DB::connection($conn)->getPdo();
+            // die();
+            // var_dump($test);
+
+
+            // using DB::connection
+            $freq_catraca = DB::connection($conn)->insert(
+                'insert into FreqCatraca (idAluno, dataLeitura, Data) values (?, ?, ?)',
+                [$request->idAluno, $request->dataLeitura, $request->Data]
+            );
+
+            // using model connection (probably using .env definitions)
+            // $freq_catraca = FreqCatraca::create([
+            //     'idAluno' => $request->idAluno,
+            //     'dataLeitura' => $request->dataLeitura,
+            //     'Data' => $request->Data,
+            // ]);
+>>>>>>> main
             
             return response()->json([
                 'status' => true,
