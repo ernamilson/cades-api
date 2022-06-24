@@ -93,7 +93,7 @@ class ExternalDatabaseController extends Controller
         // crypt data (usr, pwd, db_name)
         $encrypt_data = [
                 "database" => $data->nome_banco,
-                "user" => $data->usuario,
+                "username" => $data->usuario,
                 "password" => $data->senha
         ];
         // uncrypt data (driver, host, port)
@@ -101,8 +101,15 @@ class ExternalDatabaseController extends Controller
                 "driver" => $driver_db,
                 "host" => $data->host,
                 "port" => $port,
-                "trust_server_certificate" => 'true'
+                // "username" => 'userInfor',
+                "trust_server_certificate" => 'false',
+                "charset" => "utf8",
+                "prefix" => "",
+                "prefix_indexes" => true,
+
         ];
+
+        // var_dump($this->dec($data->usuario, $cript_reversa, $chave_cr));
 
         $decrypt_data = $this->decryptArray($encrypt_data, $cript_reversa, $chave_cr);
 
@@ -112,8 +119,12 @@ class ExternalDatabaseController extends Controller
     }
 
     private function setConnConfig($config) {
-        $conn_name = $config["driver"]."_".$config["user"];
+        // $conn_name = $config["driver"]."_".$config["user"];
+        // Config::set("database.connections.".$conn_name, $config);
+        // return $conn_name;
+        $conn_name = $config["driver"].$config["username"];
         Config::set("database.connections.".$conn_name, $config);
+        // Config::set("database.connections.sqlsrv", $config);
         return $conn_name;
     }
 
@@ -129,18 +140,18 @@ class ExternalDatabaseController extends Controller
             return false;
         }
 
+        
         // setting connection config
         $conn_cfg = $this->generateDatabaseConnectionConfig($req_data, $cript_reversa, $chave_cr);
+        
+
+        // var_dump($conn_cfg);
+        
         
         // setting connection
         $conn_name = $this->setConnConfig($conn_cfg);
 
         return $conn_name;
-        // return response()->json([
-        //     "status" => true,
-        //     "message" => 'Credenciais validadas',
-        //     // "conn" => config()->get('database.connections')[$conn_name],
-        // ]);
     }
     
 }
