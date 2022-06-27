@@ -25,4 +25,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource('/frequencias', FreqCatracaController::class);
 
-Route::apiResource('/test', ExternalDatabaseController::class);
+// Route::apiResource('/test', ExternalDatabaseController::class);
+
+Route::middleware('test')->post('/testing', function() {
+    return 'worked';
+});
