@@ -2,12 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use App\Http\Controllers\   ;
-
 use App\Models\Tokens;
-use Illuminate\Http\Request;
 
 use Closure;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
 
@@ -94,6 +92,7 @@ class AuthTokens
     private function generateDatabaseConnectionConfig($data, $cript_reversa, $chave_cr)
     {
         // matching driver name to laravel driver names
+        // var_dump($data);
         $driver_db = match($data->driver_db){
             "mssql" => "sqlsrv",
         };
@@ -136,31 +135,31 @@ class AuthTokens
         return $conn_name;
     }
 
-    public function generateConfig(Request $request)
-    {
-        [$chave_cr, $cript_reversa] = $this->getCryptoParam();
-        $tokens = new Tokens;
+    // public function generateConfig(Request $request)
+    // {
+    //     [$chave_cr, $cript_reversa] = $this->getCryptoParam();
+    //     $tokens = new Tokens;
 
-        // getting SQL response
-        $req_data = $tokens->getData($request->chave, $request->token);
-        
-        if($req_data === false) {
-            return false;
-        }
+    //     // getting SQL response
+    //     $req_data = $tokens->getData($request->chave, $request->token);
+    //     var_dump($req_data);
+    //     if($req_data === false) {
+    //         return false;
+    //     }
 
         
-        // setting connection config
-        $conn_cfg = $this->generateDatabaseConnectionConfig($req_data, $cript_reversa, $chave_cr);
+    //     // setting connection config
+    //     $conn_cfg = $this->generateDatabaseConnectionConfig($req_data, $cript_reversa, $chave_cr);
         
 
-        // var_dump($conn_cfg);
+    //     // var_dump($conn_cfg);
         
         
-        // setting connection
-        $conn_name = $this->setConnConfig($conn_cfg);
+    //     // setting connection
+    //     $conn_name = $this->setConnConfig($conn_cfg);
 
-        return $conn_name;
-    }
+    //     return $conn_name;
+    // }
 
      /**
      * Handle an incoming request.
@@ -181,13 +180,21 @@ class AuthTokens
 
         // getting SQL response
         $req_data = $tokens->getData($request->chave, $request->token);
-        try {
-            $conn_cfg = $this->generateDatabaseConnectionConfig($req_data, $cript_reversa, $chave_cr);
-        
-            // setting connection
-            $conn_name = $this->setConnConfig($conn_cfg);
-        } catch (\Throwable $th) {
-            throw $th;
+        if ($req_data !== false)
+        {
+            try {
+                $conn_cfg = $this->generateDatabaseConnectionConfig($req_data, $cript_reversa, $chave_cr);
+            
+                // setting connection
+                $conn_name = $this->setConnConfig($conn_cfg);
+            } catch (\Throwable $th) {
+                throw $th;
+                return false;
+            }
+        } else {
+           return response()->json([
+                'message' => "Could'nt connect to database."
+           ], 400); 
         }
         // setting connection config
         $request->attributes->add(['conn_cfg' => $conn_name]);

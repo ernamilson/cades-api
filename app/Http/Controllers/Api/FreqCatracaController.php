@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 
-class FreqCatracaController extends ExternalDatabaseController
+class FreqCatracaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -38,25 +38,9 @@ class FreqCatracaController extends ExternalDatabaseController
      */
     public function store(Request $request)
     {
-        $conn = $this->generateConfig($request);
-        if($conn == false) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Frequência nao cadastrada!',
-                'err' => 'Erro de credenciais!',
-                'conn' => $conn
-            ]);
-        }
-        // var_dump($conn);
-        // $freq_catraca->setConnection($freq_catraca->connection, $conn);
-        // var_dump(json_encode(config()->get('database.connections')));
         try {
-            // var_dump(json_encode(config()->get('database.connections')[$conn]));
-            // DB::connection($conn)->getPdo();
-            // die();
-            // var_dump($test);
-
-
+            $conn = $request->get('conn_cfg');
+            
             // using DB::connection
             $freq_catraca = DB::connection($conn)->insert(
                 'insert into FreqCatraca (idAluno, dataLeitura, Data) values (?, ?, ?)',
@@ -73,15 +57,15 @@ class FreqCatracaController extends ExternalDatabaseController
             return response()->json([
                 'status' => true,
                 'message' => 'Frequência cadastrada!',
-            ]);
+            ], 201);
         } catch (\Throwable $th) {
             throw $th;
             return response()->json([
                 'status' => true,
                 'message' => 'Frequência nao cadastrada!',
                 'err' => $th,
-                'conn' => $conn
-            ]);
+                // 'conn' => $conn
+            ], 404);
         }
     }
 
