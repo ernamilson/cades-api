@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Middleware\AuthTokens;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,6 +25,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('/frequencias', FreqCatracaController::class);
+// Route::apiResource('/frequencias', FreqCatracaController::class);
 
-Route::apiResource('/test', ExternalDatabaseController::class);
+// Route::apiResource('/test', ExternalDatabaseController::class);
+
+Route::middleware('authtokens')->post('/frequencias', [FreqCatracaController::class, "store"]);
