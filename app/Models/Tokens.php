@@ -20,7 +20,7 @@ class Tokens extends Model
                         driver_db, produtos_id, 
                         codigo_empresa 
                 from banco 
-                where (chave, token) = (?, ?) and produtos_id = 2",
+                where (chave, token) = (?, ?)",
                 array($chave, $token));
         } catch(Throwable $e){
             report($e);
