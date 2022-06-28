@@ -15,10 +15,7 @@ class Tokens extends Model
     public function getData($chave, $token) {
         try {
             $data = DB::connection('mysql3')->select(
-                "select chave, token, host,
-                        usuario, senha, nome_banco,
-                        driver_db, produtos_id, 
-                        codigo_empresa 
+                "select host, usuario, senha, nome_banco, driver_db 
                 from banco 
                 where (chave, token) = (?, ?) and produtos_id = 2",
                 array($chave, $token));
