@@ -46,13 +46,6 @@ class FreqCatracaController extends Controller
                 'insert into FreqCatraca (idAluno, dataLeitura, Data) values (?, ?, ?)',
                 [$request->idAluno, $request->dataLeitura, $request->Data]
             );
-
-            // using model connection (probably using .env definitions)
-            // $freq_catraca = FreqCatraca::create([
-            //     'idAluno' => $request->idAluno,
-            //     'dataLeitura' => $request->dataLeitura,
-            //     'Data' => $request->Data,
-            // ]);
             
             return response()->json([
                 'status' => true,
