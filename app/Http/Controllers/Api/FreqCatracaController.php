@@ -59,16 +59,9 @@ class FreqCatracaController extends ExternalDatabaseController
 
             // using DB::connection
             $freq_catraca = DB::connection($conn)->insert(
-                'insert into FreqCatraca (idAluno, dataLeitura, Data) values (?, ?, ?)',
-                [$request->idAluno, $request->dataLeitura, $request->Data]
+                'insert into FreqCatraca (idAluno, dataLeitura, Data, Movimento) values (?, ?, ?, ?)',
+                [$request->idAluno, $request->dataLeitura, $request->Data, $request->Movimento]
             );
-
-            // using model connection (probably using .env definitions)
-            // $freq_catraca = FreqCatraca::create([
-            //     'idAluno' => $request->idAluno,
-            //     'dataLeitura' => $request->dataLeitura,
-            //     'Data' => $request->Data,
-            // ]);
             
             return response()->json([
                 'status' => true,
