@@ -43,8 +43,8 @@ class FreqCatracaController extends Controller
 
             // using DB::connection
             $freq_catraca = DB::connection($conn)->insert(
-                'insert into FreqCatraca (idAluno, dataLeitura, Data) values (?, ?, ?)',
-                [$request->idAluno, $request->dataLeitura, $request->Data]
+                'insert into FreqCatraca (idAluno, dataLeitura, Data, Movimento) values (?, ?, ?, ?)',
+                [$request->idAluno, $request->dataLeitura, $request->Data, $request->Movimento]
             );
             
             return response()->json([
