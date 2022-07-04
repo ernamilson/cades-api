@@ -40,7 +40,7 @@ class FreqCatracaController extends Controller
     {
         try {
             $conn = $request->get('conn_cfg');
-            
+
             // using DB::connection
             $freq_catraca = DB::connection($conn)->insert(
                 'insert into FreqCatraca (idAluno, dataLeitura, Data) values (?, ?, ?)',
