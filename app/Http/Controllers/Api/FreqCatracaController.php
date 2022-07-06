@@ -40,16 +40,37 @@ class FreqCatracaController extends Controller
     {
         try {
             $conn = $request->get('conn_cfg');
-
-            // using DB::connection
+            using DB::connection
             $freq_catraca = DB::connection($conn)->insert(
                 'insert into FreqCatraca (idAluno, dataLeitura, Data, Movimento) values (?, ?, ?, ?)',
                 [$request->idAluno, $request->dataLeitura, $request->Data, $request->Movimento]
             );
-            
+
+            // Cadastrando multiplos logs
+
+            // Request will need to have a logs array
+            // {
+            //     token: xxxxxx,
+            //     chave: xxxxxx,
+            //     logs: [
+            //         {data},
+            //         {data},
+            //         {data}
+            //     ]
+            // }
+
+            // $freq_catraca = DB::connection($conn);
+            // foreach ($request->logs as $key => $value) {
+            //     $freq_catraca->insert(
+            //         'insert into FreqCatraca (idAluno, dataLeitura, Data, Movimento) values (?, ?, ?, ?)',
+            //         [$request->idAluno, $request->dataLeitura, $request->Data, $request->Movimento]
+            //     );
+            // }
+
             return response()->json([
                 'status' => true,
                 'message' => 'Frequência cadastrada!',
+                // 'request' => $request->all()
             ], 201);
         } catch (\Throwable $th) {
             throw $th;
