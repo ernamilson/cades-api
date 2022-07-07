@@ -39,16 +39,19 @@ class FreqCatracaController extends Controller
     public function store(Request $request)
     {
         try {
+            // Generating database connection config
             $conn = $request->get('conn_cfg');
+
+            // Cadastrando unico log 
             // using DB::connection
-            $freq_catraca = DB::connection($conn)->insert(
-                'insert into FreqCatraca (idAluno, dataLeitura, Data, Movimento) values (?, ?, ?, ?)',
-                [$request->idAluno, $request->dataLeitura, $request->Data, $request->Movimento]
-            );
+            // $freq_catraca = DB::connection($conn)->insert(
+            //     'insert into FreqCatraca (idAluno, dataLeitura, Data, Movimento) values (?, ?, ?, ?)',
+            //     [$request->idAluno, $request->dataLeitura, $request->Data, $request->Movimento]
+            // );
 
             // Cadastrando multiplos logs
 
-            // Request will need to have a logs array
+            // Necessário logs = []
             // {
             //     token: xxxxxx,
             //     chave: xxxxxx,
@@ -58,19 +61,19 @@ class FreqCatracaController extends Controller
             //         {data}
             //     ]
             // }
-
-            // $freq_catraca = DB::connection($conn);
-            // foreach ($request->logs as $key => $value) {
-            //     $freq_catraca->insert(
-            //         'insert into FreqCatraca (idAluno, dataLeitura, Data, Movimento) values (?, ?, ?, ?)',
-            //         [$request->idAluno, $request->dataLeitura, $request->Data, $request->Movimento]
-            //     );
-            // }
+            $req = $request->all();
+            $freq_catraca = DB::connection($conn);
+            foreach ($req['logs'] as $key => $value) {
+                $freq_catraca->insert(
+                    'insert into FreqCatraca (idAluno, dataLeitura, Data, Movimento) values (?, ?, ?, ?)',
+                    [$value['idAluno'], $value["dataLeitura"], $value["Data"], $value["Movimento"]]
+                );
+            }
 
             return response()->json([
                 'status' => true,
                 'message' => 'Frequência cadastrada!',
-                // 'request' => $request->all()
+                // 'request' => $req["logs"]
             ], 201);
         } catch (\Throwable $th) {
             throw $th;
