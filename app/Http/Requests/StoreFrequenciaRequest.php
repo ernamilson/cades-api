@@ -26,9 +26,7 @@ class StoreFrequenciaRequest extends FormRequest
         return [
             "token" => "required",
             "chave" => "required",
-            "idAluno" => "required|max:6",
-            "dataLeitura" => "required",
-            "Data" => "required"
+            "logs" => "required"
         ];
     }
 }

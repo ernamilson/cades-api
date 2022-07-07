@@ -40,41 +40,37 @@ class FreqCatracaController extends Controller
     {
         try {
             // Generating database connection config
-            $conn = $request->get('conn_cfg');
-
+            $req = $request->all();
+            
+            // Cadastrando multiplos logs
+            // Necessário logs = [{data}, {data}, ...]
+            if (!empty($req["logs"])) {
+                $conn = $request->get('conn_cfg');
+                $freq_catraca = DB::connection($conn);
+                foreach ($req['logs'] as $key => $value) {
+                    $freq_catraca->insert(
+                        'insert into FreqCatraca (idAluno, dataLeitura, Data, Movimento) values (?, ?, ?, ?)',
+                        [$value['idAluno'], $value["dataLeitura"], $value["Data"], $value["Movimento"]]
+                    );
+                }
+            } else {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Logs array vazio!'
+                ], 400);
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Frequência cadastrada!',
+                // 'request' => $req["logs"]
+            ], 201);
+            
             // Cadastrando unico log 
             // using DB::connection
             // $freq_catraca = DB::connection($conn)->insert(
             //     'insert into FreqCatraca (idAluno, dataLeitura, Data, Movimento) values (?, ?, ?, ?)',
             //     [$request->idAluno, $request->dataLeitura, $request->Data, $request->Movimento]
             // );
-
-            // Cadastrando multiplos logs
-
-            // Necessário logs = []
-            // {
-            //     token: xxxxxx,
-            //     chave: xxxxxx,
-            //     logs: [
-            //         {data},
-            //         {data},
-            //         {data}
-            //     ]
-            // }
-            $req = $request->all();
-            $freq_catraca = DB::connection($conn);
-            foreach ($req['logs'] as $key => $value) {
-                $freq_catraca->insert(
-                    'insert into FreqCatraca (idAluno, dataLeitura, Data, Movimento) values (?, ?, ?, ?)',
-                    [$value['idAluno'], $value["dataLeitura"], $value["Data"], $value["Movimento"]]
-                );
-            }
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Frequência cadastrada!',
-                // 'request' => $req["logs"]
-            ], 201);
         } catch (\Throwable $th) {
             throw $th;
             return response()->json([
