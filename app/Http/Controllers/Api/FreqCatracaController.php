@@ -49,8 +49,8 @@ class FreqCatracaController extends Controller
                 $freq_catraca = DB::connection($conn);
                 foreach ($req['logs'] as $key => $value) {
                     $freq_catraca->insert(
-                        'insert into FreqCatraca (idAluno, dataLeitura, Data, Movimento) values (?, ?, ?, ?)',
-                        [$value['idAluno'], $value["dataLeitura"], $value["Data"], $value["Movimento"]]
+                        'insert into FreqCatraca (idAluno, dataLeitura, Data, Hora, Movimento) values (?, ?, ?, ?, ?)',
+                        [$value['idAluno'], $value["dataLeitura"], $value["data"], $value["hora"], $value["movimento"]]
                     );
                 }
             } else {
